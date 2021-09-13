@@ -1,6 +1,6 @@
 { stdenv, fetchurl, lib, rpmextract, zlib, glib, nss, nspr, gtk3, util-linux
 , cairo, pango, freetype, gdk-pixbuf , expat, dbus, alsa-lib, libxcb, xorg
-, atk, at-spi2-atk
+, atk, at-spi2-atk, cups
 }:
 
 let
@@ -8,7 +8,7 @@ let
     nss zlib glib gtk3 nspr expat dbus alsa-lib atk at-spi2-atk
     libX11 libXi libXext libXrandr libXfixes libXcomposite libxcb libXau libXdamage libXtst
     libXcursor libXdmcp libXext libXfixes libXrender libxcb libxkbfile xcbutil
-    xcbutilwm util-linux cairo pango freetype gdk-pixbuf libX11
+    xcbutilwm util-linux cairo pango freetype gdk-pixbuf libX11 cups
   ]);
 in
 stdenv.mkDerivation rec {
