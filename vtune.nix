@@ -1,5 +1,16 @@
-{ stdenv, fetchurl, lib, rpmextract }:
+{ stdenv, fetchurl, lib, rpmextract, zlib, glib, nss, nspr, gtk3, util-linux
+, cairo, pango, freetype, gdk-pixbuf , expat, dbus, alsa-lib, libxcb, xorg
+, atk, at-spi2-atk
+}:
 
+let
+  libs = lib.makeLibraryPath (with xorg; [
+    nss zlib glib gtk3 nspr expat dbus alsa-lib atk at-spi2-atk
+    libX11 libXi libXext libXrandr libXfixes libXcomposite libxcb libXau libXdamage libXtst
+    libXcursor libXdmcp libXext libXfixes libXrender libxcb libxkbfile xcbutil
+    xcbutilwm util-linux cairo pango freetype gdk-pixbuf libX11
+  ]);
+in
 stdenv.mkDerivation rec {
   name = "vtune-profiler";
   src = fetchurl {
@@ -15,7 +26,7 @@ stdenv.mkDerivation rec {
     mv opt $out/
     for bin in $out/opt/intel/*/bin64/*; do
       if [[ -f $bin ]] && [[ -x $bin ]]; then
-        patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" "$bin" || true
+        patchelf --set-rpath "$(patchelf --print-rpath $bin):${libs}" --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" "$bin" || true
       fi
     done
     ln -s $out/opt/intel/*/bin64 $out/bin
